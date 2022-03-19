@@ -1,0 +1,9 @@
+.container {
+  margin-top: 10px;
+  border: 1px solid transparent;
+  width: 380px;
+}
+
+.cardWidth {
+  width: 22rem;
+}
