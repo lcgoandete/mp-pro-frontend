@@ -5,7 +5,7 @@ export default function payment() {
     try {
       const response = await axios({
         method: 'POST',
-        url: 'https://mp-pro-frontend.herokuapp.com/payment',
+        url: 'https://mp-pro-backend.herokuapp.com/payment/',
         data: { payer, product },
       });
       return response.data;

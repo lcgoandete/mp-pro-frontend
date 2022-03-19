@@ -25,7 +25,7 @@ const product = {
   pictureURL: 'https://www.havan.com.br/media/catalog/product/cache/820af7facfa7aca6eb3c138e3457dc8d/c/e/celular-smartphone-pocophone-f1-128gb-6-18-xiaomi_278995_1.jpg',
   quantity: 1,
   unitPrice: 1200.00,
-  externalReference: 'lcgoandete123@hotmail.com',
+  externalReference: 'lcgoandete@hotmail.com',
 };
 
 export default function Product() {
