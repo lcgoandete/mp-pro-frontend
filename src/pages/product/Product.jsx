@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import usePayment from '../../hooks/usePayment';
 import Loading from '../../components/loading/loading';
 import './product.css';
@@ -21,7 +21,7 @@ const payer = {
 const product = {
   id: 1234,
   title: 'PocoPhone F1',
-  description: 'Telefone Celular Xiaomi',
+  description: 'Celular de Tienda e-commerce',
   pictureURL: 'https://www.havan.com.br/media/catalog/product/cache/820af7facfa7aca6eb3c138e3457dc8d/c/e/celular-smartphone-pocophone-f1-128gb-6-18-xiaomi_278995_1.jpg',
   quantity: 1,
   unitPrice: 1200.00,
@@ -31,17 +31,44 @@ const product = {
 export default function Product() {
   const { getPayment } = usePayment();
   const [loading, setLoading] = useState(false);
+  const [preferenceId, setPreferenceID] = useState('');
 
-  async function getOrder() {
-    setLoading(true);
-    const responsePayment = await getPayment(payer, product);
-    setLoading(false);
-    window.location.href = responsePayment.init_point;
-  }
+  useEffect(() => {
+    async function getOrder() {
+      setLoading(true);
+      const responsePayment = await getPayment(payer, product);
+      setLoading(false);
+      setPreferenceID(responsePayment);
+      // window.location.href = responsePayment.init_point;
+    }
+    getOrder();
+  }, []);
+
+  useEffect(() => {
+    if (preferenceId !== '') {
+      const mercadopagoButton = document.querySelector('.mercadopago-button');
+      if (mercadopagoButton) {
+        mercadopagoButton.parentNode.removeChild(mercadopagoButton);
+      }
+
+      const script = document.createElement('script');
+      // eslint-disable-next-line no-undef
+      const mp = new MercadoPago('APP_USR-6096a634-0b35-452c-94c9-a18adb8ffb15', { locale: 'pt-BR' });
+      mp.checkout({
+        preference: {
+          id: preferenceId,
+        },
+        render: {
+          container: '.cho-container',
+          label: 'Pague a compra',
+        },
+      });
+      document.body.appendChild(script);
+    }
+  }, [preferenceId]);
 
   return (
     <div className="container">
-
       <div className="card mt-3 px-1 cardWidth">
         <img src={product.pictureURL} className="card-img-top mt-2" alt="imagem do pocophone f1" />
         <div className="card-body">
@@ -62,70 +89,64 @@ export default function Product() {
       <div className="text-center mt-4">
         <div className="mt-3 px-1 input-group mb-3">
           <span className="input-group-text">Nome</span>
-          <input className="form-control" type="text" name="fullName" id="full-name" defaultValue={payer.name} />
+          <input className="form-control" type="text" name="name" id="name" defaultValue={payer.name} />
         </div>
       </div>
 
       <div className="text-center mt-4">
         <div className="mt-3 px-1 input-group mb-3">
           <span className="input-group-text">Sobrenome</span>
-          <input className="form-control" type="text" name="fullName" id="full-name" defaultValue={payer.surname} />
+          <input className="form-control" type="text" name="surname" id="surname" defaultValue={payer.surname} />
         </div>
       </div>
 
       <div className="text-center">
         <div className="mt-3 px-1 input-group mb-3">
           <span className="input-group-text">E-mail</span>
-          <input className="form-control" type="text" name="fullName" id="full-name" defaultValue={payer.email} />
+          <input className="form-control" type="text" name="email" id="email" defaultValue={payer.email} />
         </div>
       </div>
 
       <div className="text-center">
         <div className="mt-3 px-1 input-group mb-3">
           <span className="input-group-text">Código de Area</span>
-          <input className="form-control" type="text" name="fullName" id="full-name" defaultValue={payer.phone.areaCode} />
+          <input className="form-control" type="text" name="phone-areaCode" id="phone-areaCode" defaultValue={payer.phone.areaCode} />
         </div>
       </div>
 
       <div className="text-center">
         <div className="mt-3 px-1 input-group mb-3">
           <span className="input-group-text">Telefone</span>
-          <input className="form-control" type="number" name="fullName" id="full-name" defaultValue={payer.phone.number} />
+          <input className="form-control" type="number" name="phone-number" id="phone-number" defaultValue={payer.phone.number} />
         </div>
       </div>
 
       <div className="text-center">
         <div className="mt-3 px-1 input-group mb-3">
           <span className="input-group-text">Logradouro</span>
-          <input className="form-control" type="text" name="fullName" id="full-name" defaultValue={payer.address.publicPlace} />
+          <input className="form-control" type="text" name="address-publicPlace" id="address-publicPlace" defaultValue={payer.address.publicPlace} />
         </div>
       </div>
 
       <div className="text-center">
         <div className="mt-3 px-1 input-group mb-3">
           <span className="input-group-text">Número</span>
-          <input className="form-control" type="number" name="fullName" id="full-name" defaultValue={payer.address.number} />
+          <input className="form-control" type="number" name="address-number" id="address-number" defaultValue={payer.address.number} />
         </div>
       </div>
 
       <div className="text-center">
         <div className="mt-3 px-1 input-group mb-3">
           <span className="input-group-text">Cep</span>
-          <input className="form-control" type="text" name="fullName" id="full-name" defaultValue={payer.address.zipCode} />
+          <input className="form-control" type="text" name="address-zipCode" id="address-zipCode" defaultValue={payer.address.zipCode} />
         </div>
       </div>
 
       <div className="text-center my-4">
-        <button
-          className="btn btn-lg btn-primary"
-          type="button"
-          onClick={getOrder}
-        >
-          Fazer Pedido
-        </button>
-        { loading && <Loading /> }
+        <div className="cho-container">
+          { loading && <Loading /> }
+        </div>
       </div>
-
     </div>
   );
 }

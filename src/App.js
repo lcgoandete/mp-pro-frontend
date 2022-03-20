@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-filename-extension */
 /* eslint-disable react/react-in-jsx-scope */
 
-import Product from './pages/product/Product';
+import React from 'react';
+import PageRoutes from './pages/Rotes';
 
 function App() {
   return (
-    <Product />
+    <PageRoutes />
   );
 }
 
