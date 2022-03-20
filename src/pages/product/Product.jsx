@@ -30,7 +30,7 @@ const product = {
 
 export default function Product() {
   const { getPayment } = usePayment();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [preferenceId, setPreferenceID] = useState('');
 
   useEffect(() => {
@@ -66,6 +66,15 @@ export default function Product() {
       document.body.appendChild(script);
     }
   }, [preferenceId]);
+
+  if (loading) {
+    return (
+      <div>
+        <h1>Loading...</h1>
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <div className="container">
@@ -143,9 +152,8 @@ export default function Product() {
       </div>
 
       <div className="text-center my-4">
-        <div className="cho-container">
-          { loading && <Loading /> }
-        </div>
+        <div className="cho-container" />
+        { loading && <Loading /> }
       </div>
     </div>
   );
